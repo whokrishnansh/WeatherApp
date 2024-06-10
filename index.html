@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Weather App</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="card">
+    <div class="search">
+      <input type="text" name="searchbox" id="searchbox" placeholder="Enter City Name" spellcheck="true" />
+      <button id="searchbtn">
+        <img src="images/search.png" height="40" width="40" alt="search_icon" />
+      </button>
+    </div>
+    <div class="weather">
+      <img height="100" class="weather-icon"/>
+      <h1 class="temp">______</h1>
+      <h2 class="city">City Name</h2>
+    </div>
+
+    <!-- Details  -->
+
+    <div class="details">
+      <div class="col">
+        <img src="images/humidity.png" />
+        <div>
+          <p class="humidity">____</p>
+          <p class="label">Humidity</p>
+        </div>
+      </div>
+      <div class="col">
+        <img src="images/wind.png" />
+        <div>
+          <p class="wind">____</p>
+          <p class="label">Wind Speed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const apiKey = "b77d852a581af7e2393f0e3fe097fbb1";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    const searchBox = document.querySelector(".search input");
+    const searchButton = document.querySelector(".search button");
+    const weatherIcon = document.querySelector(".weather-icon");
+
+    async function checkWeather(city) {
+      const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+      if (!response.ok) {
+        alert("City not found");
+        return;
+      }
+      const data = await response.json();
+      console.log(data);
+
+      document.querySelector(".city").innerHTML = data.name;
+      document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+      document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+      document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+      // Update weather icon
+      if (data.weather[0].main === "Clouds") {
+        weatherIcon.src = "images/clouds.png";
+      } else if (data.weather[0].main === "Rain") {
+        weatherIcon.src = "images/rain.png";
+      } else if (data.weather[0].main === "Sunny") {
+        weatherIcon.src = "images/sun.png";
+      } else if (data.weather[0].main === "Clear") {
+        weatherIcon.src = "images/clear.png";
+      } else if (data.weather[0].main === "Snow") {
+        weatherIcon.src = "images/snow.png";
+      } else {
+        weatherIcon.src = "";
+      }
+
+      // Show weather and details sections
+      document.querySelector(".weather").style.display = "block";
+      document.querySelector(".details").style.display = "flex";
+
+      // Show weather icon and details images
+      weatherIcon.style.display = "block";
+      document.querySelectorAll(".details .col img").forEach(img => {
+        img.style.display = "block";
+      });
+
+      // Clear the search box
+      searchBox.value = "";
+    }
+
+    searchButton.addEventListener("click", () => {
+      let city = searchBox.value;
+      if (city) {
+        checkWeather(city);
+      }
+    });
+
+    // Optional: Load default city weather data
+    // checkWeather("Rishikesh");
+  </script>
+</body>
+</html>
