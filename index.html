@@ -78,16 +78,6 @@
         weatherIcon.src = "";
       }
 
-      // Show weather and details sections
-      document.querySelector(".weather").style.display = "block";
-      document.querySelector(".details").style.display = "flex";
-
-      // Show weather icon and details images
-      weatherIcon.style.display = "block";
-      document.querySelectorAll(".details .col img").forEach(img => {
-        img.style.display = "block";
-      });
-
       // Clear the search box
       searchBox.value = "";
     }
